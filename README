@@ -20,7 +20,7 @@ the contents of those containers:
     - wfSorter
     - wfFunctional
 
-In addition there is memory management facilities. No containers uses
+In addition there is memory management facilities. No container uses
 global new / delete operators instead there exists a trivial wfHeap
 class in wfStandard.h which you can map to any memory management system
 you'd like. In addition there are a few memory related classes:
