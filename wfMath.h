@@ -11,8 +11,8 @@
      * Supporting any other varation of SSE is a waste of effort.  It's
      * irrelevant since we're not operating on data that will fill the
      * SIMD units enough to take advantage of SSE3+ operations.
-     */    
-#   define WF_STDLIB_MATH_PATH_TYPE "SSE2" 
+     */
+#   define WF_STDLIB_MATH_PATH_TYPE "SSE2"
 #elif defined(__ARM_NEON__)
 #   define WF_STDLIB_MATH_PATH_NEON
 #   define WF_STDLIB_MATH_PATH_TYPE "NEON"
@@ -23,8 +23,8 @@
  * vectorization.
  *
  * Sadly the supoprt on arm for this is timid at best.  There have been
- * noumours reports of bugs.   
- */   
+ * noumours reports of bugs.
+ */
 #elif defined(__ppc__) || defined(__PPC__)
 #   define WF_STDLIB_MATH_PATH_ALTIVEC
 #   define WF_STDLIB_MATH_PATH_TYPE "ALTIVEC"
@@ -157,11 +157,6 @@ namespace wfPrivate {
         );
     }
 
-    /*
-     * Clever templates allow for clever code ;)  This was initially my
-     * main design choice for using templates heavily in the core vector
-     * functionality.
-     */      
     template <size_t E>
     WF_MATH_VEC_INLINE
     wfMathVec4 wfMathVec4Length(const wfMathVec4& vec) {
@@ -202,9 +197,9 @@ namespace wfPrivate {
     WF_MATH_VEC_INLINE
     void wfMathMat4Identity(wfMathMat4 *mat) {
         /*
-         * Store static constant copy to prevent extra overhead of calling
+         * Store static constant copy to prevent extra overhead of
          * creating an identity matrix each call to this function.
-         */     
+         */
         static const wfMathVec4 identity[] = {
             {1.0f, 0.0f, 0.0f, 0.0f},
             {0.0f, 1.0f, 0.0f, 0.0f},
@@ -257,8 +252,8 @@ namespace wfPrivate {
      * Matrix multiplication is associative, in the sense that:
      * cik = aij bjk,
      * where j is summed over for all possible elemental values of i and k
-     * (the above notation is Einstien summation convention). 
-     * 
+     * (the above notation is Einstien summation convention).
+     *
      * Hence This must satisfiy (n * m)(m * p) = (n * p)
      */
     WF_MATH_VEC_INLINE
@@ -352,7 +347,7 @@ namespace wfPrivate {
         wfMathMat4 transposition = *mat;
         transposition.w          = wfMathVec4Create(0.0f, 0.0f, 0.0f, 0.0f);
 
- 
+
         wfMathMat4TransposeInplace(&transposition);
         wfMathMat4Point3Mul       (&transposition, &translation, out);
     }
@@ -439,7 +434,7 @@ namespace wfPrivate {
          * Save some extra possible extra constructions.  In reality the
          * calls to wfMathMat4Create with constant arguments should be
          * inlined, but we cannot trust it.
-         */    
+         */
         static const wfMathVec4 translation[] = {
             {1.0f, 0.0f, 0.0f, 0.0f},
             {0.0f, 1.0f, 0.0f, 0.0f},
@@ -460,12 +455,6 @@ namespace wfPrivate {
         rad  = -rad;                          /* inverse sign */
         axis = wfMathVec4Normalize<3>(axis);  /* normalize    */
 
-        /*
-         * This is most perfect axis rotation I've ever implemented
-         * I even decided to backport this back to my engine.  Since
-         * my axis rotation is implemented (usually) with two for
-         * loops, and that equates to about 360 branches (180*2)
-         */     
         const float sine   = sinf(rad);
         const float cosine = cosf(rad);
         const float loadx  = wfMathVec4GetX(axis);
@@ -494,7 +483,7 @@ namespace wfPrivate {
 
         const wfMathVec4 storek = wfMathVec4Create(
             loadc - loady  * sine,      /* x */
-            loadb + loadx  * sine,      /* y */ 
+            loadb + loadx  * sine,      /* y */
             sqz   + cosine * (1 - sqz), /* z */
             0
         );
@@ -507,10 +496,6 @@ namespace wfPrivate {
         );
     }
 
-    /*
-     * Oh macros would be so much more pleasnt to use here.  But I think
-     * it would hide much of the fun ;)
-     */  
     WF_MATH_VEC_INLINE
     void wfMathMat4Add(wfMathMat4 *a, wfMathMat4 *b, wfMathMat4 *out) {
         out->x = wfMathVec4Add(a->x, b->x);
@@ -543,19 +528,6 @@ namespace wfPrivate {
         out->w = wfMathVec4Div(a->w, b->w);
     }
 
-    /*
-     * Bam to behold, a function, built both of brilliance and barbarity
-     * by a bastard with a boner.  This bastion, no mere bulwark of boredom,
-     * is a brutal barrage of blistering bullshit, barely benevolent...
-     * but behind the bigotry, and blistering brutality, beyond the bitter
-     * broadcasts of my bragging: here be the body politic.  A brotherhood
-     * of blasphemy, blesses with more balls than brains, battling the bland,
-     * the bogus, the benign.  Bedlam?  Bring it on.  But I babble.. better
-     * to be brief.
-     * (adapted and rewrote to context for this function from
-     * http://www.urbandictionary.com/define.php?term=%2Fb%2F&defid=2312123
-     * );
-     */
     WF_MATH_VEC_INLINE
     void wfMathMat4Inverse(const wfMathMat4 *mat, wfMathMat4 *out) {
         const wfMathVec4 load0 = mat->x;

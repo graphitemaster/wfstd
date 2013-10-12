@@ -103,7 +103,7 @@ namespace wfPrivate {
          * The wfMathVec4Splat enumeration defines the correct order
          * for splat with X=0, Y=1, Z=2, W=3, which essentially make
          * using E the correct behaviour of the splat here.
-         */     
+         */
         return _mm_shuffle_ps(data, data, _MM_SHUFFLE(E, E, E, E));
     }
 
@@ -203,7 +203,7 @@ namespace wfPrivate {
         );
     }
 
-    
+
     /* Getters */
     WF_MATH_VEC_INLINE float wfMathVec4GetX(const wfMathVec4 &vec) { wfMathVec4Union u={vec}; return u.f[0]; }
     WF_MATH_VEC_INLINE float wfMathVec4GetY(const wfMathVec4 &vec) { wfMathVec4Union u={vec}; return u.f[1]; }
@@ -252,7 +252,7 @@ namespace wfPrivate {
     /*
      * Sign flipping done like a mad man on steroids .. I went and did
      * some magic here
-     */   
+     */
     typedef WF_MATH_VEC_ALIGNED16 union {
         unsigned int ui[4];
         float         f[4];
@@ -292,14 +292,6 @@ namespace wfPrivate {
      */
     WF_MATH_VEC_INLINE
     void wfMathMat4TransposeInplace(wfMathMat4 *mat) {
-#   ifndef WF_STDLIB_MATH_EXPERIMENTAL_AVX
-        _MM_TRANSPOSE4_PS(
-            mat->x,
-            mat->y,
-            mat->z,
-            mat->w
-        );
-#else 
         __m256 temp0 = _m256_unpacklo_ps(mat->x, mat->y);
         __m256 temp1 = _m256_unpacklo_ps(mat->x, mat->y);
         __m256 temp2 = _m256_unpackhi_ps(mat->z, mat->w);
@@ -308,7 +300,6 @@ namespace wfPrivate {
         mat->y = _mm256_extractf128_ps(_mm256_insertf128_ps(temp1, _mm256_extractf128_ps(temp0, 1), 0), 0);
         mat->z = _mm256_extractf128_ps(_mm256_insertf128_ps(temp2, _mm256_extractf128_ps(temp3, 0), 1), 0);
         mat->w = _mm256_extractf128_ps(_mm256_insertf128_ps(temp3, _mm256_extractf128_ps(temp2, 1), 0), 0);
-#endif
     }
 
     WF_MATH_VEC_INLINE
