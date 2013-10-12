@@ -29,7 +29,7 @@ you'd like. In addition there are a few memory related classes:
     - wfNullPointer
 
 There exists a highly-optimized math library that can take
-advantage of AltiVec, Neon, SSE and auto vectorization, if they're
+advantage of AltiVec, Neon, SSE and auto vectorization if they're
 present, otherwise it fallbacks to scalar operations. The math components
 are exposed as:
     - wfMat4
